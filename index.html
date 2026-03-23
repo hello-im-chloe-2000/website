@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hello im chloe ✈️</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Fredoka+One&display=swap');
+
+    :root {
+      --pink: #ff6eb4;
+      --cyan: #00f5ff;
+      --purple: #b44aff;
+      --yellow: #ffef5e;
+      --dark: #0a0014;
+      --card: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: #e8e0f0;
+      font-family: 'Space Mono', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── custom cursor ── */
+    #cursor {
+      position: fixed;
+      width: 12px; height: 12px;
+      background: var(--pink);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: screen;
+      transition: transform 0.08s ease, background 0.2s;
+    }
+    #cursor-trail {
+      position: fixed;
+      width: 28px; height: 28px;
+      border: 1.5px solid var(--purple);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: screen;
+      transition: left 0.12s ease, top 0.12s ease, opacity 0.3s;
+      opacity: 0.5;
+    }
+
+    /* ── star background ── */
+    #stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      animation: twinkle var(--dur) infinite ease-in-out alternate;
+    }
+    @keyframes twinkle {
+      from { opacity: 0.1; transform: scale(1); }
+      to   { opacity: 0.9; transform: scale(1.4); }
+    }
+
+    /* ── layout ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      grid-template-rows: auto;
+      gap: 18px;
+    }
+
+    /* ── header spans full width ── */
+    .header {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 32px 0 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .name-glitch {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      color: var(--pink);
+      text-shadow:
+        2px 2px 0 var(--purple),
+        -2px -1px 0 var(--cyan);
+      position: relative;
+      display: inline-block;
+      animation: glitch 4s infinite;
+    }
+    @keyframes glitch {
+      0%, 90%, 100% { text-shadow: 2px 2px 0 var(--purple), -2px -1px 0 var(--cyan); transform: none; }
+      92% { text-shadow: -4px 2px 0 var(--cyan), 4px -2px 0 var(--pink); transform: translate(2px, -1px); }
+      94% { text-shadow: 4px -2px 0 var(--purple), -4px 1px 0 var(--yellow); transform: translate(-2px, 1px); }
+      96% { text-shadow: 2px 2px 0 var(--purple), -2px -1px 0 var(--cyan); transform: none; }
+    }
+
+    .tagline {
+      margin-top: 10px;
+      color: var(--cyan);
+      font-size: 0.82rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    .nav-pills {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .nav-pills a {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--purple);
+      text-decoration: none;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      transition: all 0.2s;
+    }
+    .nav-pills a:hover {
+      background: var(--purple);
+      color: white;
+      border-color: var(--purple);
+      box-shadow: 0 0 12px var(--purple);
+    }
+
+    /* ── sidebar ── */
+    .sidebar { display: flex; flex-direction: column; gap: 14px; }
+
+    /* ── main column ── */
+    .main-col { display: flex; flex-direction: column; gap: 14px; }
+
+    /* ── footer spans full width ── */
+    .footer-row {
+      grid-column: 1 / -1;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      text-align: center;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ── card ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      backdrop-filter: blur(4px);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,110,180,0.04), rgba(0,245,255,0.04));
+      pointer-events: none;
+    }
+    .card-title {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── profile card ── */
+    .profile-avatar {
+      width: 100px; height: 100px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      border: 3px solid var(--pink);
+      box-shadow: 0 0 24px var(--pink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.2rem;
+      background: radial-gradient(circle, #1a0030, #0a0014);
+      animation: float 3.5s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .profile-name {
+      text-align: center;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      color: var(--pink);
+    }
+    .profile-sub {
+      text-align: center;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.4);
+      margin-top: 2px;
+    }
+    .profile-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-top: 14px;
+      text-align: center;
+    }
+    .stat-val { font-size: 1.1rem; color: var(--cyan); font-family: 'Fredoka One', cursive; }
+    .stat-lbl { font-size: 0.62rem; color: rgba(255,255,255,0.35); text-transform: uppercase; }
+
+    /* ── mood ── */
+    .mood-text { font-size: 0.82rem; }
+    .mood-text span { color: var(--pink); }
+
+    /* ── now playing ── */
+    .now-playing {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .album-art {
+      width: 52px; height: 52px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #300060, #001840);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      animation: spin-slow 8s linear infinite;
+    }
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .track-info { flex: 1; overflow: hidden; }
+    .track-name {
+      color: white;
+      font-size: 0.82rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .track-artist { font-size: 0.7rem; color: rgba(255,255,255,0.4); }
+    .progress-bar {
+      margin-top: 8px;
+      height: 3px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--pink), var(--cyan));
+      width: 38%;
+      animation: progress 240s linear infinite;
+    }
+    @keyframes progress {
+      from { width: 38%; }
+      to   { width: 100%; }
+    }
+
+    /* ── about ── */
+    .about-text p { margin-bottom: 10px; font-size: 0.82rem; }
+    .about-text p:last-child { margin-bottom: 0; }
+    .highlight { color: var(--cyan); }
+    .highlight-pink { color: var(--pink); }
+    .highlight-purple { color: var(--purple); }
+
+    /* ── interests grid ── */
+    .interests-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag {
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid;
+      letter-spacing: 0.06em;
+    }
+    .tag-pink  { border-color: var(--pink);   color: var(--pink);   background: rgba(255,110,180,0.08); }
+    .tag-cyan  { border-color: var(--cyan);   color: var(--cyan);   background: rgba(0,245,255,0.08); }
+    .tag-purp  { border-color: var(--purple); color: var(--purple); background: rgba(180,74,255,0.08); }
+    .tag-yell  { border-color: var(--yellow); color: var(--yellow); background: rgba(255,239,94,0.08); }
+
+    /* ── deep thoughts ── */
+    .thought {
+      border-left: 3px solid var(--purple);
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      background: rgba(180,74,255,0.06);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.82rem;
+      font-style: italic;
+    }
+    .thought:last-child { margin-bottom: 0; }
+    .thought-date {
+      display: block;
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.3);
+      margin-top: 5px;
+      font-style: normal;
+    }
+
+    /* ── guestbook ── */
+    .guestbook-entry {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 0.8rem;
+    }
+    .guestbook-entry:last-child { margin-bottom: 0; }
+    .gb-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+    .gb-name { color: var(--cyan); font-size: 0.72rem; }
+    .gb-msg { color: rgba(255,255,255,0.65); }
+
+    /* ── links ── */
+    .links-list { list-style: none; }
+    .links-list li { margin-bottom: 8px; }
+    .links-list a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 0.78rem;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .links-list a:hover { color: var(--pink); }
+    .links-list a::before { content: '→'; color: var(--purple); }
+
+    /* ── sparkle canvas ── */
+    #sparkle-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* ── blink ── */
+    .blink { animation: blink 1.2s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── marquee banner ── */
+    .marquee-wrap {
+      grid-column: 1 / -1;
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 7px 0;
+      background: rgba(0,0,0,0.3);
+    }
+    .marquee-inner {
+      display: inline-flex;
+      gap: 40px;
+      white-space: nowrap;
+      animation: marquee 30s linear infinite;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.35);
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-inner span { color: var(--pink); }
+
+    /* ── responsive ── */
+    @media (max-width: 680px) {
+      .page { grid-template-columns: 1fr; }
+      .header, .footer-row, .marquee-wrap { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
+<canvas id="sparkle-canvas"></canvas>
+<div id="stars"></div>
+
+<div class="page">
+
+  <!-- header -->
+  <header class="header" id="top">
+    <div class="name-glitch">✈️ hello, im chloe</div>
+    <p class="tagline">2000 · chaotic neutral · probably overthinking something rn</p>
+    <nav class="nav-pills">
+      <a href="#about">about</a>
+      <a href="#thoughts">thoughts</a>
+      <a href="#interests">interests</a>
+      <a href="#guestbook">guestbook</a>
+      <a href="#links">links</a>
+    </nav>
+  </header>
+
+  <!-- marquee -->
+  <div class="marquee-wrap">
+    <div class="marquee-inner">
+      <span>★</span> currently: vibing and not explaining myself &nbsp;
+      <span>★</span> last updated: just now &nbsp;
+      <span>★</span> status: thinking too much about something small &nbsp;
+      <span>★</span> mood: sharp but soft &nbsp;
+      <span>★</span> life motto: figure it out &nbsp;
+      <span>★</span> currently: vibing and not explaining myself &nbsp;
+      <span>★</span> last updated: just now &nbsp;
+      <span>★</span> status: thinking too much about something small &nbsp;
+      <span>★</span> mood: sharp but soft &nbsp;
+      <span>★</span> life motto: figure it out &nbsp;
+    </div>
+  </div>
+
+  <!-- ── sidebar ── -->
+  <aside class="sidebar">
+
+    <!-- profile -->
+    <div class="card">
+      <div class="card-title">profile</div>
+      <div class="profile-avatar">👩🏻‍✈️</div>
+      <div class="profile-name">chloe</div>
+      <div class="profile-sub">born 2000 · she/her · somewhere chaotic</div>
+      <div class="profile-stats">
+        <div>
+          <div class="stat-val">∞</div>
+          <div class="stat-lbl">thoughts</div>
+        </div>
+        <div>
+          <div class="stat-val">2</div>
+          <div class="stat-lbl">sleeps/night</div>
+        </div>
+        <div>
+          <div class="stat-val">💜</div>
+          <div class="stat-lbl">friends</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- mood -->
+    <div class="card">
+      <div class="card-title">current mood</div>
+      <p class="mood-text">
+        feeling <span>✨ quietly electric ✨</span><br/>
+        like there's something big just below the surface<br/>
+        but also like, whatever<span class="blink">_</span>
+      </p>
+    </div>
+
+    <!-- now playing -->
+    <div class="card">
+      <div class="card-title">now playing</div>
+      <div class="now-playing">
+        <div class="album-art">🎵</div>
+        <div class="track-info">
+          <div class="track-name">Resonance</div>
+          <div class="track-artist">HOME</div>
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- links -->
+    <div class="card" id="links">
+      <div class="card-title">links</div>
+      <ul class="links-list">
+        <li><a href="https://github.com/hello-im-chloe-2000" target="_blank" rel="noopener">github</a></li>
+        <li><a href="#thoughts">my thoughts</a></li>
+        <li><a href="#guestbook">sign my guestbook</a></li>
+        <li><a href="#top">back to top ↑</a></li>
+      </ul>
+    </div>
+
+  </aside>
+
+  <!-- ── main column ── -->
+  <main class="main-col">
+
+    <!-- about -->
+    <div class="card" id="about">
+      <div class="card-title">about me</div>
+      <div class="about-text">
+        <p>hi!! ok so. i am <span class="highlight-pink">chloe</span>. i made this page because i wanted a corner of the internet that feels like mine and not like a brand.</p>
+        <p>i'm one of those people who looks like a mess from the outside but actually has a whole <span class="highlight">organized filing system</span> inside their head. everything's connected if you look at it right.</p>
+        <p>i care a lot about things i pretend not to care about. i'll call you out if you're being dumb about something <span class="highlight-purple">and</span> also be the first person to check on you at 2am.</p>
+        <p>i think most problems in the world come from people not being honest enough with themselves. and also from poor system design. both equally.</p>
+        <p>if you're reading this: <span class="highlight-pink">hi. you seem interesting.</span></p>
+      </div>
+    </div>
+
+    <!-- interests -->
+    <div class="card" id="interests">
+      <div class="card-title">things i'm into</div>
+      <div class="interests-grid">
+        <span class="tag tag-pink">systems thinking</span>
+        <span class="tag tag-cyan">lo-fi music</span>
+        <span class="tag tag-purp">late night coding</span>
+        <span class="tag tag-yell">aviation (obviously)</span>
+        <span class="tag tag-pink">philosophy of mind</span>
+        <span class="tag tag-cyan">retro aesthetics</span>
+        <span class="tag tag-purp">sharp conversations</span>
+        <span class="tag tag-yell">weird corner of youtube</span>
+        <span class="tag tag-pink">space stuff</span>
+        <span class="tag tag-cyan">making things work</span>
+        <span class="tag tag-purp">honesty</span>
+        <span class="tag tag-yell">cats probably</span>
+        <span class="tag tag-pink">2000s internet nostalgia</span>
+        <span class="tag tag-cyan">emergent complexity</span>
+      </div>
+    </div>
+
+    <!-- deep thoughts -->
+    <div class="card" id="thoughts">
+      <div class="card-title">deep thoughts (do not read)</div>
+
+      <div class="thought">
+        chaos isn't the absence of order. it's just order that hasn't been mapped yet. once you find the pattern, everything gets quieter.
+        <span class="thought-date">— march 2026</span>
+      </div>
+
+      <div class="thought">
+        people underestimate how much of "being smart" is just being willing to sit with uncertainty for longer than feels comfortable.
+        <span class="thought-date">— february 2026</span>
+      </div>
+
+      <div class="thought">
+        the internet used to feel like a place. now it feels like a service. i miss when it felt like a place.
+        <span class="thought-date">— january 2026</span>
+      </div>
+
+      <div class="thought">
+        you don't have to be loud to be sharp. you just have to be accurate.
+        <span class="thought-date">— december 2025</span>
+      </div>
+    </div>
+
+    <!-- guestbook -->
+    <div class="card" id="guestbook">
+      <div class="card-title">guestbook</div>
+
+      <div class="guestbook-entry">
+        <div class="gb-avatar">🌙</div>
+        <div>
+          <div class="gb-name">starscript99</div>
+          <div class="gb-msg">found your page from a link on a forum and i've been here for 20 minutes. congrats on being interesting.</div>
+        </div>
+      </div>
+
+      <div class="guestbook-entry">
+        <div class="gb-avatar">⚡</div>
+        <div>
+          <div class="gb-name">v0id_walker</div>
+          <div class="gb-msg">the thought about chaos and order hit. sharing that with everyone i know.</div>
+        </div>
+      </div>
+
+      <div class="guestbook-entry">
+        <div class="gb-avatar">🪐</div>
+        <div>
+          <div class="gb-name">k1n3t1c</div>
+          <div class="gb-msg">ur page is unhinged in the best way. love the cursor. love the vibe. come back online more.</div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- footer -->
+  <footer class="footer-row">
+    <p>
+      made by chloe · 2026 · best viewed at midnight ·
+      <span class="blink">♥</span>
+      coded from scratch because templates are for people who've given up
+    </p>
+  </footer>
+
+</div>
+
+<script>
+  // ── cursor ──
+  const cursor = document.getElementById('cursor');
+  const trail  = document.getElementById('cursor-trail');
+  let mx = 0, my = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top  = my + 'px';
+    setTimeout(() => {
+      trail.style.left = mx + 'px';
+      trail.style.top  = my + 'px';
+    }, 60);
+  });
+
+  // ── stars ──
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 140; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.4 + 0.6;
+    s.style.cssText = `
+      left: ${Math.random()*100}%;
+      top:  ${Math.random()*100}%;
+      width: ${size}px;
+      height: ${size}px;
+      --dur: ${(Math.random()*3+1.5).toFixed(2)}s;
+      animation-delay: ${(Math.random()*3).toFixed(2)}s;
+      opacity: ${Math.random()*0.6+0.1};
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // ── sparkles on click ──
+  const canvas = document.getElementById('sparkle-canvas');
+  const ctx    = canvas.getContext('2d');
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  window.addEventListener('resize', () => {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
+  const particles = [];
+  const colors = ['#ff6eb4','#00f5ff','#b44aff','#ffef5e','#ffffff'];
+
+  document.addEventListener('click', e => {
+    for (let i = 0; i < 18; i++) {
+      const angle = (Math.PI * 2 / 18) * i + (Math.random()-0.5)*0.4;
+      const speed = Math.random()*3 + 1.2;
+      particles.push({
+        x: e.clientX, y: e.clientY,
+        vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed,
+        life: 1,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        size: Math.random()*4 + 2,
+      });
+    }
+  });
+
+  function drawParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy;
+      p.vy += 0.08;
+      p.life -= 0.03;
+      if (p.life <= 0) { particles.splice(i, 1); continue; }
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(drawParticles);
+  }
+  drawParticles();
+</script>
+</body>
+</html>
